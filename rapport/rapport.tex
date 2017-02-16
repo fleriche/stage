@@ -1,0 +1,197 @@
+\documentclass[11pt,twoside]{scrreprt}
+\usepackage[utf8]{inputenc} 	%package pour le français sous ubuntu : à vous d'adapter
+\usepackage[french]{babel}	%pour le français
+\usepackage[T1]{fontenc}	%pour les polices
+\usepackage{amsmath}		%pour des maths
+\usepackage{amsfonts}		%pour des maths
+\usepackage{amssymb}		%pour des maths
+\usepackage{graphicx}		%pour les inclusions de graphiques
+\usepackage{times}		%choix personnel de police : Times New Roman 
+\usepackage{lscape}		%si vous voulez des images en paysage
+\usepackage{hyperref}		%pour les liens croisés à travers le fichier .pdf
+\usepackage{fancyhdr}		%pour les marges
+\usepackage{float, caption}	%pour le positionnement et légende des images
+\usepackage{color}		%pour la couleur dans le code
+\usepackage{listings}		%pour mettre du code, plutôt en Annexe
+\usepackage{lastpage}		%pour les références aux pages
+\usepackage{epic,eepic}		%pour le positionnement de l'image de garde
+\usepackage{wrapfig}		%pour les images sur le coté dans le texte
+\usepackage{calc,ifthen,xspace}	%pour redéfinir les espaces et distances
+\usepackage{scrlfile}
+\PreventPackageFromLoading{fp}
+\usepackage[final]{pdfpages} % Pour inclure un pdf
+\usepackage[titletoc]{appendix} % Pour les annexes
+\usepackage{glossaries} % Pour le lexique
+\usepackage{tabularx}
+\usepackage{diagbox}
+\ResetPreventPackageFromLoading
+\usepackage{array}
+\pagestyle{fancy}
+\AddThinSpaceBeforeFootnotes 
+\FrenchFootnotes 
+\makeglossaries
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{xspace}
+\usepackage{listingsutf8}
+\usepackage{xcolor}
+\usepackage{afterpage}
+\usepackage{url}
+\usepackage[top=2.1cm,bottom=2.3cm,left=2cm,right=2cm]{geometry}
+\usepackage{multirow}
+\usepackage{verbatim}
+
+% Pour sommaire cliquable 
+
+\hypersetup{
+dvips,
+backref=true, %permet d'ajouter des liens dans...
+pagebackref=true,%...les bibliographies
+hyperindex=true, %ajoute des liens dans les index.
+colorlinks=false, %colorise les liens
+breaklinks=true, %permet le retour à la ligne dans les liens trop longs
+urlcolor= blue, %couleur des hyperliens
+linkcolor= blue, %couleur des liens internes
+bookmarks=blue, %créé des signets pour Acrobat
+bookmarksopen=true} 
+
+\definecolor{hellgelb}{rgb}{1,1,0.8} % couleur pour le code
+\definecolor{colKeys}{rgb}{0,0,1}
+\definecolor{colIdentifier}{rgb}{0,0,0}
+\definecolor{colComments}{rgb}{0,0.5,0}
+\definecolor{colString}{rgb}{0.62,0.12,0.94}
+\definecolor{INSA_GM}{cmyk}{0.6,0,0,0} % et la page de garde
+\definecolor{INSA_GRIS}{cmyk}{0.7,0.6,0.5,0.3}
+\definecolor{INSA_BLEU}{cmyk}{1,0.9,0.1,0}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{mygrayblack}{rgb}{0.32,0.32,0.32}
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\usepackage{templateINSA}
+\initINSA
+
+% Titre centre
+\renewcommand\infoBig{Rapport de stage ingénieur}
+\renewcommand\infoSmall{}
+
+% Titre bas 
+\title{Sous titre}
+\renewcommand\soustitre{INSA de Rouen}
+
+% Auteurs
+\author{ 
+	\textbf{Étudiants:} Florian \bsc{Leriche}\\
+	\textbf{Université:} INSA de Rouen\\
+	\textbf{Date:} 13/02/2017 - 11/08/2017\\
+	}
+
+\begin{document}
+\thispagestyle{empty}
+% titleINSA : Page de garde 
+% #1 : descendre le titre du milieu (en mm)
+% #2 : lien de l'image de fond
+% #3 : décalage sur X de l'image de fond (en mm)
+% #4 : décalage sur Y de l'image de fond (en mm)
+% #5 : largeur de l'image de fond de #5 (en mm)
+% #6 : Crédit de l'image de fond
+\titleINSA{10}{}{-10}{100}{240}{Image : \href{http://www.google.fr/}{\color{white}{http://www.google.fr/}}}
+
+\thispagestyle{empty}
+
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+	\tableofcontents
+	\thispagestyle{empty}
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+
+\newpage
+
+\chapter*{Remerciements}
+	\addcontentsline{toc}{chapter}{Remerciements}
+	\setcounter{page}{1}
+	\setcounter{tocdepth}{1}
+\input{src/remerciements}
+
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+	\chapter*{Introduction}				% garde la même mise en page qu'un chapitre mais ne le numérote pas
+	\addcontentsline{toc}{chapter}{Introduction}	% permet de l'avoir dans le sommaire
+
+\input{src/introduction}
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+
+
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------	
+\chapter{Spécifications}
+
+	\input{src/specification}
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+\chapter{Conception}
+	
+	\input{src/conception}
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+	
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------	
+\chapter{Implémentation et résultats}
+
+	\input{src/implementation}
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+	
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+\chapter*{Conclusion et perspectives} %même mise en page chapitre mais numérote pas
+	\addcontentsline{toc}{chapter}{Conclusion et perspectives} %ajout au sommaire
+	
+	\input{src/conclusion}
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+
+
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+% BIBLIOGRAPHIE
+\begin{thebibliography}{9}
+	\addcontentsline{toc}{chapter}{Bibliographie}	% permet de l'avoir dans le sommaire
+
+%	\bibitem{Livre 01}
+%		\textsc{Nom}, Prénom
+%		\textit{Titre},
+%		edition, date.
+%
+% USE : \cite{Livre 01}
+
+\end{thebibliography}
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+% ANNEXES
+\begin{appendices}
+
+	\chapter{A1}
+	\label{a1}
+	
+\end{appendices}
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+\newpage
+\newpage
+% Page blanche
+
+\end{document}
