@@ -76,19 +76,22 @@ bookmarksopen=true}
 \initINSA
 
 % Titre centre
-\renewcommand\infoBig{Rapport de stage ingénieur}
-\renewcommand\infoSmall{}
+\renewcommand\infoBig{Leriche Florian}
+\renewcommand\infoSmall{Rapport de stage ingénieur}
 
 % Titre bas 
-\title{Sous titre}
-\renewcommand\soustitre{INSA de Rouen}
+\title{Transformation digitale au sein des banques privées}
+\renewcommand\soustitre{Sopra Steria Group}
 
 % Auteurs
 \author{ 
-	\textbf{Étudiants:} Florian \bsc{Leriche}\\
-	\textbf{Université:} INSA de Rouen\\
-	\textbf{Date:} 13/02/2017 - 11/08/2017\\
-	}
+	\textbf{Étudiant :} \bsc{Leriche} Florian\\
+	\textbf{Maîtres de stage :} \bsc{Sacenda} Cyril, \bsc{Berthaud} Laurent\\
+	\textbf{Entreprise :} Sopra Steria\\
+	\textbf{Années :} 2016-2017\\
+	\textbf{Date :} du 13/02/2017 au 11/08/2017\\
+	\textbf{Lieu :} Paris, France\\
+}
 
 \begin{document}
 \thispagestyle{empty}
@@ -99,7 +102,7 @@ bookmarksopen=true}
 % #4 : décalage sur Y de l'image de fond (en mm)
 % #5 : largeur de l'image de fond de #5 (en mm)
 % #6 : Crédit de l'image de fond
-\titleINSA{10}{}{-10}{100}{240}{Image : \href{http://www.google.fr/}{\color{white}{http://www.google.fr/}}}
+\titleINSA{15}{images/fond.jpg}{-20}{60}{250}{Image : \href{http://img.decision-achats.fr/Img/BREVE/2016/1/300834/Digitalisation-opportunite-achats-porteurs-innovation--F.jpg}{\color{white}{http://img.decision-achats.fr/}}}
 
 \thispagestyle{empty}
 
@@ -127,33 +130,44 @@ bookmarksopen=true}
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------
 
-
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------	
-\chapter{Spécifications}
+\chapter{Présentation de l'entreprise}
 
-	\input{src/specification}
+	\input{src/entreprise}
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------
 
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------
-\chapter{Conception}
+
+\chapter{Présentation des sujets}
 	
-	\input{src/conception}
+	\input{src/sujet}
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------
 	
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------	
-\chapter{Implémentation et résultats}
+\chapter{Travail effectué chez Neuflize OBC}
 
-	\input{src/implementation}
+	\input{src/travailNeuflizeOBC}
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------
 	
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------
+
+\chapter{Travail effectué chez BP1818}
+
+	\input{src/travailBP1818}
+	
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+	
+%-----------------------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------
+	
 \chapter*{Conclusion et perspectives} %même mise en page chapitre mais numérote pas
 	\addcontentsline{toc}{chapter}{Conclusion et perspectives} %ajout au sommaire
 	
@@ -174,6 +188,10 @@ bookmarksopen=true}
 %		edition, date.
 %
 % USE : \cite{Livre 01}
+
+\bibitem{kaki}
+		Site \textsc{PokerListings - }\textsf{le guide de poker all-in} \\
+		\url{http://fr.pokerlistings.com/regles-holdem}
 
 \end{thebibliography}
 %-----------------------------------------------------------------------------------------------------------------
