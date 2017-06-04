@@ -1,15 +1,15 @@
 \documentclass[11pt,twoside]{scrreprt}
 \usepackage[utf8]{inputenc} 	%package pour le français sous ubuntu : à vous d'adapter
 \usepackage[french]{babel}	%pour le français
-\usepackage[T1]{fontenc}	%pour les polices
+%\usepackage[T1]{fontenc}	%pour les polices
 \usepackage{amsmath}		%pour des maths
 \usepackage{amsfonts}		%pour des maths
 \usepackage{amssymb}		%pour des maths
 \usepackage{graphicx}		%pour les inclusions de graphiques
-\usepackage{times}		%choix personnel de police : Times New Roman 
+%\usepackage{times}		%choix personnel de police : Times New Roman 
 \usepackage{lscape}		%si vous voulez des images en paysage
 \usepackage{hyperref}		%pour les liens croisés à travers le fichier .pdf
-\usepackage{fancyhdr}		%pour les marges
+%\usepackage{fancyhdr}		%pour les marges
 \usepackage{float, caption}	%pour le positionnement et légende des images
 \usepackage{color}		%pour la couleur dans le code
 \usepackage{listings}		%pour mettre du code, plutôt en Annexe
@@ -30,8 +30,8 @@
 \AddThinSpaceBeforeFootnotes 
 \FrenchFootnotes 
 \makeglossaries
-\usepackage{lmodern}
-\usepackage{textcomp}
+%\usepackage{lmodern}
+%\usepackage{textcomp}
 \usepackage{xspace}
 \usepackage{listingsutf8}
 \usepackage{xcolor}
@@ -109,7 +109,6 @@ bookmarksopen=true}
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------
 	\tableofcontents
-	\addtocontents{toc}{\protect\thispagestyle{empty}}
 	\thispagestyle{empty}
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------
@@ -190,25 +189,9 @@ bookmarksopen=true}
 %
 % USE : \cite{Livre 01}
 
-\bibitem{bib_microservices}
-		Article de \textsc{Martin Fowler - }\textsf{Explications sur l'architecture microservices} \\
-		\url{https://martinfowler.com/articles/microservices.html}
-		
-\bibitem{bib_netflix}
-		\textsc{Netflix OSS - }\textsf{Explications sur la stack Netflix OSS} \\
-		\url{https://netflix.github.io/}
-
-\bibitem{bib_zuul}
-		Github de \textsc{Zuul - }\textsf{Documentation sur Zuul de la stack Netflix OSS} \\
-		\url{https://github.com/Netflix/zuul}
-		
-\bibitem{bib_eureka}
-		Github de \textsc{Eureka - }\textsf{Documentation sur Eureka de la stack Netflix OSS} \\
-		\url{https://github.com/Netflix/eureka}
-
-\bibitem{bib_hystrix}
-		Github de \textsc{Hystrix - }\textsf{Documentation sur Hystrix de la stack Netflix OSS} \\
-		\url{https://github.com/Netflix/hystrix}
+\bibitem{kaki}
+		Site \textsc{PokerListings - }\textsf{le guide de poker all-in} \\
+		\url{http://fr.pokerlistings.com/regles-holdem}
 
 \end{thebibliography}
 %-----------------------------------------------------------------------------------------------------------------
@@ -219,9 +202,8 @@ bookmarksopen=true}
 % ANNEXES
 \begin{appendices}
 
-	\chapter{Architecture logicielle - Neuflize OBC}
+	\chapter{A1}
 	\label{a1}
-	\input{src/annexes/a1.tex}
 	
 \end{appendices}
 %-----------------------------------------------------------------------------------------------------------------
