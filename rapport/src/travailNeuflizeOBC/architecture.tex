@@ -1,8 +1,9 @@
 \paragraph{}
 Dans cette partie nous allons présenter plus en détails l'architecture globale du projet d'application mobile de Neuflize OBC. Comme nous l'avons vu précédemment, ce projet est basé sur une architecture multicouches dont la structure est représentée dans sa globalité figure \ref{archiLog}. Nous allons maintenant décrire chacune des couches afin de comprendre le fonctionnement du projet. Cependant, les technologies employées étant nombreuses, il serait peu pertinent de toutes les expliciter, ainsi seule l'essentiel en lien avec le stage sera ici décrit. Toutefois, il est possible de retrouver une explication des différentes briques en annexe.
 
-\subsection{API Security Gateway}
-	TODO : blabla sur la couche
+\subsection{Axway API Gateway}
+\label{axway}
+	TODO : blabla sur la couche Security
 		
 	L'API Gateway est le serveur traitant les appels API. Cette brique est en charge de la sécurité applicative des appels vers la couche API Management. Elle est positionnée dans le tiers 1, reçois les appels « HTTPS » et a principalement pour objectif d’effectuer les actions suivantes : \\
 	
@@ -15,9 +16,8 @@ Dans cette partie nous allons présenter plus en détails l'architecture globale
 		\item Collecter et tracer les exécutions pour la SLA (Service Level Agreement) \\
 	\end{itemize}
 	
-	\subsection{API Management}
 	
-	TODO : blabla sur la couche
+	TODO : blabla sur la couche Management
 	
 	L'\textit{API manager} permet de configurer et d’exposer les API. Il contient également un mini serveur http afin de proposer des pages statiques d’authentification utilisateur. Il assure les fonctionnalités suivantes : \\
 	
@@ -52,7 +52,7 @@ Deux instances d’API Gateway seront installées en mode « actif/actif ». La 
 	\label{troisTiers}
 \end{figure}
 	
-	L'ensemble des services est contenu dans la même application et ces derniers sont donc exécutés dans un même processus. Ainsi, le moindre changement nécessite de rebuild et redéployer l'application entièrement. La scalabilité horizontale (par exemple un ajout de serveur) en est impactée. En effet, l'application entière doit être migrée si l'on souhaite changer de matériels afin d'améliorer les performances. Si un certain module est plus lent, il n'est pas possible de le déplacer indépendemment afin d'améliorer son exécution, il faut répliquer le monolithe entier tandis que du côté des microservices il est possible de répliquer un service en particulier et d'en redéployer un sans avoir à redéployer tout l'ensemble. De plus, dans les gros projets, la quantité de code a tendance à augmenter rapidement impliquant une hausse de la compléxité et rendant ainsi difficile l'ajout de nouvelles fonctionnalités. Le couplage entre ces dernières devient fort et les nombreux effets de bords résultant de chaque modifications rendent alors l'application moins fiable, limitant les perspectives d'évolution. \\
+	L'ensemble des services est contenu dans la même application et ces derniers sont donc exécutés dans un même processus. Ainsi, le moindre changement nécessite de rebuild et redéployer l'application entièrement. La scalabilité horizontale (par exemple un ajout de serveur) en est impactée. En effet, l'application entière doit être migrée si l'on souhaite changer de matériels afin d'améliorer les performances. Si un certain module est plus lent, il n'est pas possible de le déplacer indépendemment afin d'améliorer son exécution, il faut répliquer le monolithe entier tandis que du côté des microservices il est possible de répliquer un service en particulier et d'en redéployer un sans avoir à redéployer tout l'ensemble. De plus, dans les gros projets, la quantité de code a tendance à augmenter rapidement impliquant une hausse de la compléxité et rendant ainsi difficile l'ajout de nouvelles fonctionnalités. Le couplage entre ces dernières devient fort et les nombreux effets de bords résultant de chaque modifications rendent alors l'application moins fiable, limitant les perspectives d'évolution. 
 
 \begin{figure}[H]
     \begin{minipage}{.5\textwidth}
