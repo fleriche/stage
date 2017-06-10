@@ -3,9 +3,10 @@ Dans cette partie nous allons présenter plus en détails l'architecture globale
 
 \subsection{Axway API Gateway}
 \label{axway}
-	TODO : blabla sur la couche Security
+
+	Deux instances de l'API Gateway d'Axway ont été installées en mode « actif/actif » afin d'assurer la mise en place de la couche \textit{security} et celle de la couche \textit{management}. La répartition de charge est gérée par l'instance positionnée en amont. \\
 		
-	L'API Gateway est le serveur traitant les appels API. Cette brique est en charge de la sécurité applicative des appels vers la couche API Management. Elle est positionnée dans le tiers 1, reçois les appels « HTTPS » et a principalement pour objectif d’effectuer les actions suivantes : \\
+	L'API Gateway de la couche security est le serveur traitant les appels API. Cette dernière est en charge de la sécurité applicative des appels vers la couche API Management. Elle est positionnée dans le tiers 1, reçois les appels « HTTPS » et a principalement pour objectif d’effectuer les actions suivantes : \\
 	
 	\begin{itemize}
 		\item Vérifier la validité des certificats partenaires
@@ -16,10 +17,7 @@ Dans cette partie nous allons présenter plus en détails l'architecture globale
 		\item Collecter et tracer les exécutions pour la SLA (Service Level Agreement) \\
 	\end{itemize}
 	
-	
-	TODO : blabla sur la couche Management
-	
-	L'\textit{API manager} permet de configurer et d’exposer les API. Il contient également un mini serveur http afin de proposer des pages statiques d’authentification utilisateur. Il assure les fonctionnalités suivantes : \\
+	La couche API management, dans le tiers 2, permet de configurer et d’exposer les API. Elle contient également un mini serveur http afin de proposer des pages statiques d’authentification utilisateur. Elle assure les fonctionnalités suivantes : \\
 	
 	\begin{itemize}
 		\item Publier et sécuriser les API
@@ -27,10 +25,8 @@ Dans cette partie nous allons présenter plus en détails l'architecture globale
 		\item Gérer l’authentification et les habilitations (développeurs et administrateurs API)
 		\item Embarquer les développeurs d’applications consommatrices d’API
 		\item Auditer, suivre la consommation des API, gérer les quotas
-		\item Haute disponibilité \\
+		\item Assurer la haute disponibilité \\
 	\end{itemize}
-
-Deux instances d’API Gateway seront installées en mode « actif/actif ». La répartition de charge sera gérée par le composant API Gateway positionné en amont.
 	
 \subsection{Microservices}
 
@@ -69,7 +65,7 @@ Deux instances d’API Gateway seront installées en mode « actif/actif ». La 
     \end{minipage}
 \end{figure}
 
-		Dans notre cas, l'objectif de la couche microservices est de réaliser la composition des services métiers exposés par EFS dans le but d'exposer les données pour les applications ou les partenaires (comme PBI dont nous avons parlé dans la partie \ref{prezAppNeuflize}) qui viendront les consommer. Cette dernière est constituée des éléments présents sur la figure \ref{coucheMicroservices}.
+		Dans notre cas, l'objectif de la couche microservices , située dans le tiers 2, est de réaliser la composition des services métiers exposés par EFS dans le but d'exposer les données pour les applications ou les partenaires (comme PBI dont nous avons parlé dans la partie \ref{prezAppNeuflize}) qui viendront les consommer. Cette dernière est constituée des éléments présents sur la figure \ref{coucheMicroservices}. Les services EFS sont exposés via une surcouche API, située dans le tiers 2.
 
 \begin{figure}[H]
 \raggedleft
