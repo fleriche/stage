@@ -41,33 +41,35 @@ Dans cette partie nous allons présenter plus en détails l'architecture globale
 		\item Une couche d'accès aux données permettant de gérer les données persistantes \\
 	\end{itemize}
 	
-\begin{figure}[H]
+\begin{figure}[h!]
 	\includegraphics[scale=0.5]{images/travailNeuflizeOBC/architecture/troisTiers.png}
 	\centering
 	\caption{Architecture trois tiers monolithique}
 	\label{troisTiers}
 \end{figure}
 	
-	L'ensemble des services est contenu dans la même application et ces derniers sont donc exécutés dans un même processus. Ainsi, le moindre changement nécessite de rebuild et redéployer l'application entièrement. La scalabilité horizontale (par exemple un ajout de serveur) en est impactée. En effet, l'application entière doit être migrée si l'on souhaite changer de matériels afin d'améliorer les performances. Si un certain module est plus lent, il n'est pas possible de le déplacer indépendemment afin d'améliorer son exécution, il faut répliquer le monolithe entier tandis que du côté des microservices il est possible de répliquer un service en particulier et d'en redéployer un sans avoir à redéployer tout l'ensemble. De plus, dans les gros projets, la quantité de code a tendance à augmenter rapidement impliquant une hausse de la compléxité et rendant ainsi difficile l'ajout de nouvelles fonctionnalités. Le couplage entre ces dernières devient fort et les nombreux effets de bords résultant de chaque modifications rendent alors l'application moins fiable, limitant les perspectives d'évolution. 
+	L'ensemble des services est contenu dans la même application et ces derniers sont donc exécutés dans un même processus. Ainsi, le moindre changement nécessite de rebuild et redéployer l'application entièrement. La scalabilité horizontale (par exemple un ajout de serveur) en est impactée. En effet, l'application entière doit être migrée si l'on souhaite changer de matériels afin d'améliorer les performances. Si un certain module est plus lent, il n'est pas possible de le déplacer indépendemment afin d'améliorer son exécution, il faut répliquer le monolithe entier tandis que du côté des microservices il est possible de répliquer un service en particulier et d'en redéployer un sans avoir à redéployer tout l'ensemble. De plus, dans les gros projets, la quantité de code a tendance à augmenter rapidement impliquant une hausse de la compléxité et rendant ainsi difficile l'ajout de nouvelles fonctionnalités. Le couplage entre ces dernières devient fort et les nombreux effets de bords résultant de chaque modifications rendent alors l'application moins fiable, limitant les perspectives d'évolution.
 
-\begin{figure}[H]
+\begin{figure}[h!]
     \begin{minipage}{.5\textwidth}
     \raggedright
 		\includegraphics[scale=0.55]{images/travailNeuflizeOBC/architecture/monolithScale.png}
-		\caption{Scalabilité horizontale d'une application monolithique}
+		\caption{Scalabilité horizontale d'une application monolithique \\}
 		\label{monolithScale}
     \end{minipage}%
-    \hspace{1cm}
+    \hspace{0.5cm}
     \begin{minipage}{.5\textwidth}
         \includegraphics[scale=0.5]{images/travailNeuflizeOBC/architecture/microservicesScale.png}
-		\caption{Scalabilité horizontale des microservices}
+		\caption{Scalabilité horizontale des microservices \\}
 		\label{microservicesScale}
     \end{minipage}
 \end{figure}
 
-		Dans notre cas, l'objectif de la couche microservices , située dans le tiers 2, est de réaliser la composition des services métiers exposés par EFS dans le but d'exposer les données pour les applications ou les partenaires (comme PBI dont nous avons parlé dans la partie \ref{prezAppNeuflize}) qui viendront les consommer. Cette dernière est constituée des éléments présents sur la figure \ref{coucheMicroservices}. Les services EFS sont exposés via une surcouche API, située dans le tiers 2.
+\newpage
 
-\begin{figure}[H]
+		Dans notre cas, l'objectif de la couche microservices , située dans le tiers 2, est de réaliser la composition des services métiers exposés par EFS dans le but d'exposer les données pour les applications ou les partenaires (comme PBI dont nous avons parlé dans la partie \ref{prezAppNeuflize}) qui viendront les consommer. Cette dernière est constituée des éléments présents sur la figure \ref{coucheMicroservices}. Les services EFS sont exposés via une surcouche API, située dans le tiers 2. \\
+
+\begin{figure}[h!]
 \raggedleft
 	\includegraphics[scale=0.5]{images/travailNeuflizeOBC/architecture/coucheMicroservices.png}
 	\centering

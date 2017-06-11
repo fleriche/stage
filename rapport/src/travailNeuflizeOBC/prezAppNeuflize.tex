@@ -7,24 +7,36 @@
 	L'API microservices utilise la stack Netflix OSS qui permet d'intégrer les patterns classiques aux application distribuées. Les composants Netflix sont intégrés via Spring Cloud. Les services proposés par cette couche sont les suivants :\\
 
 \begin{itemize}
-			\item account-service : gérant les informations liées aux comptes des utilisateurs
-			\item profile-service : gérant les informations liées aux profils des utilisateurs
-			\item transaction-service : gérant les informations liées aux transactions bancaires \\
+			\item Account-service : gérant les informations liées aux comptes des utilisateurs
+			\item Profile-service : gérant les informations liées aux profils des utilisateurs
+			\item Transaction-service : gérant les informations liées aux transactions bancaires \\
 \end{itemize}
 
-	Ces services permettent de fournir de nombreuses fonctionnalités de consultation et de transaction. Voici une liste des principales fonctionnalités associées au service correspondant :
-	\begin{itemize}
-		\item \hl{TODO correspondance}
-		\item Consultation des comptes bancaires (montant, etc...)
-		\item Rib
-		\item Opérations bancaires sur le compte
-		\item Transactions réalisées/reçues
-		\item Initier une transaction
-		\item Signer numériquement une transaction
-		\item Authentification par clavier virtuel
-		\item Rechercher les comptes créditeurs
-		\item Rechercher les comptes débiteurs
-	\end{itemize}
+	Ces services permettent de fournir de nombreuses fonctionnalités de consultation et de transaction en renvoyant des réponses au format JSON. Voici une liste des principales fonctionnalités associées au service correspondant :
+	\begin{table}[h!]
+	\center
+	\begin{tabular}{| c | c | c |}
+     \hline
+     Service & Fonction & Description \\ \hline
+     Account-service & AccountOperations & Liste les opérations effectuées \\ & & sur un compte bancaire \\ \hline
+     Account-service & AccountOverview & Liste les informations d'un compte \\ \hline
+     Account-service & LoanDetails & Liste les informations d'un crédit \\ \hline
+     Account-service & PositionDetails & Liste les informations d'une position \\ \hline
+     Account-service & Rib & Liste les informations contenu dans un rib \\ \hline
+     Account-service & ClientList & Liste toutes les racines et comptes du client \\ \hline
+     Account-service & PortfolioAndLI & Liste les portefeuilles et assurances vie \\ \hline
+     Account-service & RetrieveBalance & TODO \\ \hline
+     Transaction-service & AddressBook & Permet de lister les comptes créditeurs d'un client \\ \hline
+     Transaction-service & NewTransfer & Permet d'initier une transaction \\ \hline
+     Transaction-service & AccountToDebit & Permet de lister les comptes débiteurs d'un client \\ \hline
+     Transaction-service & VKB & Permet de générer un clavier numérique virtuel \\ \hline
+     Transaction-service & SignTransaction & Permet de signer numériquement une transaction \\ \hline
+     Transaction-service & TransactionOverview & Liste les transactions effectuées par le client\\
+     \hline
+	\end{tabular}
+	\caption{Fonctionnalités de l'API microservices}
+	\label{fonctionnalites}
+\end{table}
 
 \begin{figure}[H]
 \raggedleft
@@ -33,4 +45,3 @@
 	\caption{Présentation du projet et des acteurs}
 	\label{archiFonc}
 \end{figure}
-
