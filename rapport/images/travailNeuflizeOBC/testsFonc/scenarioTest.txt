@@ -1,0 +1,18 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+actor User
+rectangle EffectuerVirement {
+  User -- (EffectuerVirement)
+  (EffectuerVirement) .> (Authentifier) : include
+  (Authentifier) .> (GénérerToken) : include
+  (GénérerToken) .> (GénérerVKB) : include
+  (EffectuerVirement) .> (SignerTransaction) : include
+  (SignerTransaction) .> (InitierTransaction) : include
+  (InitierTransaction) .> (CompteCréditeur) : include
+  (InitierTransaction) .> (CompteDébiteur) : include
+  (VérifierSolde) .> (EffectuerVirement) : extends
+  (VérifierSolde) .> (ConsulterCompte) : include
+  (ConsulterCompte) .> (ListerComptes) : include
+}
+@enduml
