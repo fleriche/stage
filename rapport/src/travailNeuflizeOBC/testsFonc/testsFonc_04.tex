@@ -32,9 +32,14 @@
 	
 	Les tests étant nombreux, j’ai décidé de les classer par service afin de rapidement en retrouver un en particulier et de pouvoir les jouer selon le microservice désiré. Cela s'est avéré utile par la suite, lorsqu'un service était défaillant, pour pouvoir facilement lancer les tests le concernant, étudier les réponses obtenues et cibler l'origine des anomalies. Il était, en effet, beaucoup plus rapide d'avoir recours à JMeter qui permettait d'envoyer de nombreuses requêtes avec différents paramètres plutôt que d'exécuter des requêtes manuellement via Postman jusqu'à réussir à reproduire un bug pour l'analyser. 
 	
-	Après cela, j’ai défini la structure du plan de test général qui devais contenir tous les tests fonctionnels en choisissant les composants qui allaient le constituer puis en procédant au paramétrage des différents éléments de configuration. La capture d’écran de JMeter figure \hl{TODO ref} montre la structure que j’ai établi pour le plan de test final et chacun des services. Cet structure est explicitée sous cette figure via une explication du détail de chaque élément employé ainsi que ses intéractions avec les autres. \\
+	Après cela, j’ai défini la structure du plan de test général qui devais contenir tous les tests fonctionnels en choisissant les composants qui allaient le constituer puis en procédant au paramétrage des différents éléments de configuration. La capture d’écran de JMeter figure \ref{jmeterPlanTest} montre la structure que j’ai établi pour le plan de test final et chacun des services. Cette structure est explicitée sous cette figure via une explication du détail de chaque élément employé ainsi que ses intéractions avec les autres. \\
 	
-	\hl{FIGURE CAPTURE D'ECRAN JMETER}
+	\begin{figure}[h!]
+		\includegraphics[scale=0.7]{images/travailNeuflizeOBC/testsFonc/jmeterPlanTest.png}
+		\centering
+		\caption{Plan de test JMeter}
+		\label{jmeterPlanTest}
+	\end{figure}
 	
 	\paragraph{1 - Moteur d'utilisateur}
 	Le moteur d'utilisateurs est l'élément englobant tous les composants, permettant de définir le niveau de charge affecté au plan de tests. Dans notre cas, ces derniers étant fonctionnels, le nombre de threads (utilisateurs) ainsi que le nombre d'itération des requêtes est de 1. De plus, le temps de montée en charge est laissé par défaut afin que les tests soient exécutés dans les meilleures conditions possibles.

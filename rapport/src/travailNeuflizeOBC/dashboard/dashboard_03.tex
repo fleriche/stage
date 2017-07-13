@@ -1,0 +1,10 @@
+	Comme nous l'avons vu dans la partie précedente, les données qiu seront exploitées sont des logs. Ainsi, après avoir installé et configuré les différents éléments de la stack ELK, mon objectif était de générer des logs afin que puisse tester chacune des composantes entrant en jeu. Cependant, avant d'aller plus loin, il faut savoir que l'API microservices génère déjà de nombreux logs informatif permettant d'analyser les actions effectuées, l'état des services ou encore les erreurs. De plus, il existe d'autres outils comme RabbitMQ, un message broker, qui génère une grande quantité de logs. Les lignes qui nous intéressent pour construire les visualisations sont donc noyées dans un flot d'information qui ne cesse de croître à mesure que le temps s'écoule. La première étape a donc été de définir un modèle permettant de différencier les lignes de logs qui seraient destinées au dashboard de celles qui ne le sont pas. \\
+
+\begin{itemize}
+	\item definission du modele analytics
+	\item création de données bidons pour les logs
+	\item conf logstash filtre grok
+	\item requête elasticsearch
+	\item creation des visualisation sur Kibana
+	\item limitations
+\end{itemize}

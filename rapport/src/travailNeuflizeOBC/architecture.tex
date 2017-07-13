@@ -28,7 +28,9 @@ Dans cette partie nous allons présenter plus en détails l'architecture globale
 		\item Assurer la haute disponibilité \\
 	\end{itemize}
 	
-	Une interface web avait aussi été mise à notre disposition par Axway, nous permettant de traquer toutes les requêtes effectuées. \hl{TODO : explication rapide sur les tokens de securite et l'authentification}
+	Une interface web avait aussi été mise à notre disposition par Axway, nous permettant de traquer toutes les requêtes effectuées. \\
+	
+	Afin d'assurer la sécurité l'API utilise \textit{OAuth2} ainsi que \textit{JWT}. OAuth2 est un framework d'authentification permettant d'authentifier plusieurs applications différentes. JWT est un protocole d'authentification permettant de créer et valider des \textit{tokens} (ou jetons) de sécurité. Ces tokens sont ensuite utilisés pour limiter l'accès des utilisateurs aux API. A chaque utilisateur correspond une combinaison login/mot de passe. Si cette combinaison peut être vérifiée par la couche security de la Gateway, un token est généré contenant les informations permettant à un utilisateur d'accéder aux ressources protégées. Ainsi, toute les requêtes émises vers l'api microservices doivent contenir un token permettant l'authentification sans quoi elles seront rejetées. J'ai simplifié ici la procédure et limité les informations à ce qui est nécessaire pour la compréhension du rapport. En effet, celle-ci est extrêmement complexe et dépasse ce qui a été effectué dans le cadre du stage.
 	
 \subsection{Microservices}
 
@@ -81,7 +83,7 @@ Dans cette partie nous allons présenter plus en détails l'architecture globale
 	Cette brique prend aussi en charge l’implémentation des principaux patterns à savoir : \\
 	
 \begin{itemize}
-	\item Circuit breaker : Capacité du système à être tolérant à la panne. En cas d’erreur successive lors de l’appel d’un sous-composant, le circuit d’appel est coupé « temporairement » en adoptant un comportement par défaut. L'implémentation qui a été choisie pour ce pattern est Hystrix de la stack \textit{Netflix OSS} \cite{bib_hystrix} permettant de contrôler la latence et les erreurs dues à des appels réseaux. L'idée essentielle est d'empêcher les erreurs en cascade dans un environnement distribué. Hystrix permet de \textit{fail-fast} mais de se rétablir rapidement créant ainsi une architecture tolérante aux erreurs capable de se remettre de manière autonome (on parle de self-heal). Ainsi, dès sa conception, le système prévoit les pannes. \newpage
+	\item Circuit breaker : Capacité du système à être tolérant à la panne. En cas d’erreur successive lors de l’appel d’un sous-composant, le circuit d’appel est coupé « temporairement » en adoptant un comportement par défaut. L'implémentation qui a été choisie pour ce pattern est Hystrix de la stack \textit{Netflix OSS} \cite{bib_hystrix} permettant de contrôler la latence et les erreurs dues à des appels réseaux. L'idée essentielle est d'empêcher les erreurs en cascade dans un environnement distribué. Hystrix permet de \textit{fail-fast} mais de se rétablir rapidement créant ainsi une architecture tolérante aux erreurs capable de se remettre de manière autonome (on parle de self-heal). Ainsi, dès sa conception, le système prévoit les pannes.
 	\item Feature toggle : Le principe est d’avoir une branche de développement et de déployer en production en continu. Ensuite, l’activation d’une « feature » est pilotée par le business. Cela permet aussi d’activer une fonctionnalité en fonction d’une population ou une stratégie particulière. \\
 \end{itemize}
 
