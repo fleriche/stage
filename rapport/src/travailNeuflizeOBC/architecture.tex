@@ -6,18 +6,17 @@ Dans cette partie nous allons présenter plus en détails l'architecture globale
 
 	Deux instances de l'API Gateway d'Axway ont été installées en mode « actif/actif » afin d'assurer la mise en place de la couche \textit{security} et celle de la couche \textit{management}. La répartition de charge est gérée par l'instance positionnée en amont. \\
 		
-	L'API Gateway de la couche security est le serveur traitant les appels API. Cette dernière est en charge de la sécurité applicative des appels vers la couche API Management. Elle est positionnée dans le tiers 1, reçois les appels « HTTPS » et a principalement pour objectif d’effectuer les actions suivantes : \\
+	L'API Gateway de la couche security est le serveur traitant les appels API. Cette dernière est en charge de la sécurité applicative des appels vers la couche API Management. Elle est positionnée dans le tier 1, reçoit les appels « HTTPS » et a principalement pour objectif d’effectuer les actions suivantes : \\
 	
 	\begin{itemize}
 		\item Vérifier la validité des certificats partenaires
 		\item Filtrer les requêtes entrantes 
 		\item Agir comme un pare-feu applicatif afin de vérifier le contenu des messages REST
 		\item Répartir la charge vers les composants en aval
-		\item Protéger le SI en limitant le nombre d’appels API via un mécanisme de régulation du traffic et en limitant le nombre d'appels au SI via un mécanisme de cache
-		\item Collecter et tracer les exécutions pour la SLA (Service Level Agreement) \\
+		\item Protéger le SI en limitant le nombre d’appels API via un mécanisme de régulation du traffic et en limitant le nombre d'appels au SI via un mécanisme de cache \\
 	\end{itemize}
 	
-	La couche API management, dans le tiers 2, permet de configurer et d’exposer les API. Elle contient également un mini serveur http afin de proposer des pages statiques d’authentification utilisateur. Elle assure les fonctionnalités suivantes : \\
+	La couche API management, dans le tier 2, permet de configurer et d’exposer les API. Elle assure les fonctionnalités suivantes : \\
 	
 	\begin{itemize}
 		\item Publier et sécuriser les API

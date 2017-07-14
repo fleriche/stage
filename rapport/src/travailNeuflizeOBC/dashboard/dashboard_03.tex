@@ -1,10 +1,144 @@
-	Comme nous l'avons vu dans la partie précedente, les données qiu seront exploitées sont des logs. Ainsi, après avoir installé et configuré les différents éléments de la stack ELK, mon objectif était de générer des logs afin que puisse tester chacune des composantes entrant en jeu. Cependant, avant d'aller plus loin, il faut savoir que l'API microservices génère déjà de nombreux logs informatif permettant d'analyser les actions effectuées, l'état des services ou encore les erreurs. De plus, il existe d'autres outils comme RabbitMQ, un message broker, qui génère une grande quantité de logs. Les lignes qui nous intéressent pour construire les visualisations sont donc noyées dans un flot d'information qui ne cesse de croître à mesure que le temps s'écoule. La première étape a donc été de définir un modèle permettant de différencier les lignes de logs qui seraient destinées au dashboard de celles qui ne le sont pas. \\
+	Comme nous l'avons vu dans la partie précedente, les données qui seront exploitées sont des logs. Ainsi, après avoir installé et configuré les différents éléments de la stack ELK, mon objectif était de générer des logs afin que puisse tester chacune des composantes entrant en jeu. Cependant, avant d'aller plus loin, il faut savoir que l'API microservices génère déjà de nombreux logs informatifs permettant d'analyser les actions effectuées, l'état des services ou encore les erreurs. De plus, il existe d'autres outils comme RabbitMQ, un message broker, qui génère une grande quantité de logs. Les lignes qui nous intéressent pour construire les visualisations sont donc noyées dans un flot d'information qui ne cesse de croître à mesure que le temps s'écoule. La première étape a donc été de définir un modèle permettant de différencier les lignes de logs qui seraient destinées au dashboard de celles qui ne le sont pas. \\
+	
+	\subsubsection{Mise en place du modèle}
+	
+	Grâce à Logback, tous les logs de l'API suivaient le même pattern constitué d'une première partie auto-générée et d'une seconde partie contenant le message effectivement loggé. Par exemple, dans le code la ligne suivante :
 
-\begin{itemize}
-	\item definission du modele analytics
-	\item création de données bidons pour les logs
-	\item conf logstash filtre grok
-	\item requête elasticsearch
-	\item creation des visualisation sur Kibana
-	\item limitations
-\end{itemize}
+\begin{lstlisting}[language=json]
+ LOGGER.info("message");
+\end{lstlisting}	
+
+ aurait pour effet de générer la ligne de log suivante :
+
+\begin{lstlisting}[language=json]
+ [timestamp] [host] [thread] logLevel class@method:line - message
+\end{lstlisting}
+
+avec :
+
+\begin{table}[h!]
+	\center
+	\begin{tabular}{| c | c |}
+     \hline
+     timestamp & Date d'émission du log \\ \hline
+     host & VM sur laquelle le log a été émis \\ \hline
+     thread & Thread depuis lequel le log a été émis \\ \hline
+     loglevel & Niveau du log (INFO, WARNING, ERROR etc...) \\ \hline
+     class & Classe depuis laquelle le log a été émis \\ \hline
+     method & Méthode depuis laquelle le log a été émis \\ \hline
+     line & Ligne à laquelle le log a été émis \\ \hline
+     message & Le contenu du log \\
+     \hline
+	\end{tabular}
+	\caption{Log - première partie}
+	\end{table}
+	
+	J'ai décidé que les logs à destination de Kibana contiendraient un message commençant par le mot-clé \textit{ANALYTICS}. Ainsi, j'ai configuré FileBeat pour qu'il n'envoie que les logs dont le message commençait par ce mot à Logstash et qu'il ignore les autres. La suite du message contiendrait toutes les informations nécessaires pour élaborer les graphiques. Parmis ces informations, les suivantes seraient obligatoires et entourées de crochet :
+	
+	\begin{table}[h!]
+	\center
+	\begin{tabular}{| c | c |}
+     \hline
+     username & Login de l'abonné envoyant les requêtes \\ \hline
+     microservice & Microservice depuis lequel le log a été émis \\ \hline
+     service & Service depuis lequel le log a été émis \\
+     \hline
+	\end{tabular}
+	\caption{Log - deuxième partie}
+	\end{table}
+	
+	Une ligne finale ressemblerait donc a :
+	
+\begin{lstlisting}[language=json]
+ [timestamp] [host] [application] logLevel class@method:line - [ANALYTICS] [username] [microservice] [service] info1=valeur1 info2=valeur2 ... infoN=valeurN 
+\end{lstlisting}
+	
+	J'ai ensuite placé la génération de log dans tous les services de l'API. Pour le service NewTransfer permettant d'initialiser une transaction bancaire on pouvait par exemple obtenir :
+	
+\begin{lstlisting}[language=json]
+[2016-06-26 08:11:34.086] [FR7WSPAR54464] [main] INFO c.n.a.m.t.logstash.LogStashTests@testNewTransfer:36 - [ANALYTICS] [COCKZAO72] [Transaction] [NewTransfer] transactionId=13072409724 totalAmount=1000 paymentMode=SINGLE currency=EUR internal=true
+\end{lstlisting}
+
+	Les informations optionnels transactionId, totalAmount, paymentMode, currency et internal sont propres au service NewTransfer et ne seront pas présentes dans les logs des autres services. 
+	
+	\subsubsection{Configuration de Logstash}
+	
+	Tous ces logs seront envoyé par Filebeat à Logstash qui aura pour objectif de les structurer à l'aide de filtres. Il est possible de définir plusieurs filtres qui seront alors appliquer dans l'ordre les uns après les autres. Ainsi, j'ai créé un premier filtre permettant de parser la première partie des logs depuis le timestamp jusqu'au nom du service. Cette partie étant commune à tous les logs, ce filtre est toujours appliqué et en premier. Celui-ci se présente sous cette forme :
+	
+\begin{lstlisting}[language=json]
+filter {
+ grok {
+  match => {
+   "message" => "(?m)\[%{TIMESTAMP_ISO8601:timestamp}\] \[%{HOSTNAME:host}\] \[%{DATA:thread}\] %{LOGLEVEL:logLevel} %{DATA:class}@%{DATA:method}:%{DATA:line} \- \[ANALYTICS\] \[%{DATA:username}\] \[%{DATA:microservice}\] \[%{DATA:service}\]"
+  }
+ }
+
+ date {
+  match => ["timestamp" , "YYYY-MM-dd HH:mm:ss.SSS"]
+  target => "@timestamp"
+ }
+}
+\end{lstlisting}
+
+	Nous pouvons observer la présence d'un filtre Grok avec une instruction \textit{match}. Si ce filtre est placé en premier, il récupère la ligne de log et essaie de la faire matcher avec le pattern défini dans l'instruction match. Les chaînes en majuscule désigne des constantes représentant les types de données supportés par Logstash. Par exemple, la première valeur entre crochet du log sera stockée dans le champ timestamp et sera de type TIMESTAMP\_ISO8601 alors que la dernière sera stockée dans le champ service et sera de type DATA (c'est-à-dire tout type de caractères). Une fois tous les champs créés, un second filtre \textit{date} permet de parser le timestamp précédemment recueilli pour l'utiliser comme date pour l'événement logstash. Kibana se basera par la suite sur cette date pour construire les visualisations. \\
+	
+	Si l'on reprend notre example de log avec NewTransfer, on peut s'apercevoir ici que les informations optionnels ne sont pas encore matchées. Pour ça il faut rajouter un second filtre qui s'en chargera. De manière générale, j'ai créé de nombreux filtres pour chacun des services de l'API. Pour chacun de ceux-là j'ai placé une condition afin qu'ils ne soient appliqués que pour le service correspondant. Ainsi, dans notre exemple, le champ service prend la valeur "NewTransfer" et donc seuls les filtres NewTransfer seront par la suite appliqués. \\
+	
+	Une fois tous les filtres exécutés, les données sont structurées et sont envoyées à ElasticSearch qui se charge de les indexer sous la forme de document puis de les stocker en base. Il est possible de préciser, juste après les filtres, l'index qui sera utilisé. Ici j'ai choisi : \textit{api-microservices-YYYY.MM} (où YYYY.MM désigne la date). De ce fait, un index sera créé tous les mois afin de faciliter la recherche des informations sur Kibana. 
+	
+	\subsubsection{Création des visualisations sur Kibana}
+	
+	A ce stade, la configuration Logstash est terminée et nos logs sont bien envoyés à ElasticSearch. La dernière étape est donc de créer les différents graphiques exploitant nos données sur Kibana. Le client a seulement spécifié les données qu'il souhaitait pouvoir consulter et non la forme sous laquelle elles devaient apparaître c'est pourquoi j'ai à chaque fois essayé de choisir des graphiques adaptés parmis les types qui existaient (table, camembert etc...). Kibana vient avec une interface web sur laquelle il est possible de choisir une visualisation puis d'y associer une requête ElasticSearch afin de l'alimenter. Afin de pouvoir avoir un aperçu des graphiques rapidement j'ai créé des tests unitaires qui ne faisaient que générer des logs. Ensuite, il était possible d'exécuter ces tests via Spring pour générer autant de logs que j'en avais besoin pour construire mes visualisations sans avoir a réellement envoyer des requêtes vers l'API. \\
+	
+	Lorsque l'on créé une visualisation, Kibana met à notre disposition des outils permettant de choisir, par exemple, quel type d'opération on souhaite effectuer sur les données : les compter, prendre le maximum, les additionner etc... ou encore quel type d'agrégation on veut mettre en place. Cela permet de construire les requêtes ElasticSearch qui fourniront les données à afficher. Toujours sur l'exemple de NewTransfer, l'un des besoins était de pouvoir suivre le montant des virements effectués via l'application mobile. Pour cela, j'ai décidé de faire un diagramme de type \textit{donut} dont plusieurs examples sont disponibles en annexe \ref{c1}. Ce diagramme est construit sur la requête suivante :
+	
+\begin{lstlisting}[language=json]
+{
+ "size": 0,
+ "query": {
+  "match": {
+   "service": "NewTransfer"
+  }
+ },
+ "aggs": {
+  "aggMontant": {
+   "range": {
+    "field": "montant",
+	"ranges": [{
+	 "from": 0,
+	 "to": 200
+	},
+	{
+	 "from": 200,
+	 "to": 400
+	},
+	{
+	 "to": 600,
+	 "from": 400
+	},
+	{
+	 "to": 800,
+	 "from": 600
+	},
+	{
+	 "to": 1000,
+	 "from": 800
+	},
+	{
+	 "from": 1000
+	}
+	],
+	 "keyed": true
+   }
+  }
+ }
+}	
+\end{lstlisting}
+
+	On commence par préciser que l'on ne match que les documents dont le champ \textit{service} a pour valeur "NewTransfer". Ensuite, on réalise une \textit{agrégation} sur les données récupérées. Les agrégations sont des opérations permettant de résumer les données de manière complexe. Ici, elle est de type \textit{range} et a pour but de classer les données selon des intervalles de valeur défini en dessous. On précise ici que le classement s'effectuera sur la valeur du champ montant. \\
+	
+	Malheureusement, j'ai rencontré quelques problèmes durant la création des visualisations. En effet, il s'est avéré que certains besoins ne pouvaient finalement pas être satisfait. Par exemple, les métiers souhaitaient pouvoir suivre le nombre d'abonnés qui s'étaient connectés à l'application et trier cela sur des intervals (10 abonnés se sont connectés entre 0 et 50 fois, 15 abonnées entre 50 et 100 fois etc...). Si j'ai finalement pu réussir à construire une requête ElasticSearch pour obtenir de telles données, il n'y avait aucune visualisation Kibana qui pouvait l'accueillir ou la reconstituer. Pour pallier cela j'ai essayé de fournir d'autres visualisations répondant à un besoin se rapprochant le plus possible de celui d'origine afin que le client puisse quand même accéder à certaines données même si cela était moins pratique.
+	
+	Je pense que la principale erreur était que si la stack ELK permet de effectivement de faire du monitoring, elle n'est pas faite pour du monitoring métier mais plutôt pour du monitoring technique. Par exemple, surveiller les temps de réponses, les erreurs au sein des services, observer les performances etc... De plus, je pense aussi que j'aurais du aller un peu plus en profondeur dans mon étude de Kibana avant d'organiser la réunion avec le client au cours de laquelle nous avons défini les besoins qui seraient satisfait. J'ai découvert par la suite que Kibana propose une option avancée sur ses visualisations avec laquelle il est possible de passer des paramètres en JSON qui seront par la suite mergé avec l'agrégation qu'il réalise. Cependant, je n'ai pas pu appronfondir cette possibilité faute de temps et de documentation à son sujet. \\
+	
+	En outre, depuis la création du dashboard, de nouvelles versions de Kibana sont sorties, apportant de nouvelles visualisations ainsi que de nouveaux outils plus performant pour construire les graphiques. Il pourrait être intéressant de vérifier si certains besoins pourraient maintenant être comblés et, le cas échéant, mettre Kibana à jour. Une autre solution, bien que peu envisageable maintenant, aurait pu être d'utiliser un autre outil que Kibana, compatible avec ElasticSearch comme par exemple Grafana.
