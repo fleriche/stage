@@ -32,6 +32,7 @@ Dans cette partie nous allons présenter plus en détails l'architecture globale
 	Afin d'assurer la sécurité l'API management utilise \textit{OAuth2} ainsi que \textit{JWT}. OAuth2 est un framework d'authentification permettant d'authentifier plusieurs applications différentes. JWT est un protocole d'authentification permettant de créer et valider des \textit{tokens} (ou jetons) de sécurité. Ces tokens sont ensuite utilisés pour limiter l'accès des utilisateurs aux API. Pour chaque utilisateur qui se connecte, la Rest Layer envoie une assertion SAML. Si cette assertion est vérifiée par l'API management un token est généré contenant les informations permettant à un utilisateur d'accéder aux ressources protégées. Ainsi, toute les requêtes émises vers l'api microservices doivent contenir un token permettant l'authentification sans quoi elles seront rejetées (erreur 401 : Unauthorized). J'ai simplifié ici la procédure et limité les informations à ce qui est nécessaire pour la compréhension du rapport. En effet, celle-ci est extrêmement complexe et dépasse ce qui a été effectué dans le cadre du stage.
 	
 \subsection{Microservices}
+\label{microservicesArchi}
 
 	Avant d'aller plus loin, nous allons expliciter ce qu'est une architecture microservices \cite{bib_microservices} afin de pouvoir comprendre la structure des API. Il s'agit d'un paradigme d'architecture qui jouit actuellement d'une grande popularité aux dépends de celles plus classiques (N-tiers, SOA...), inventée afin de répondre aux problématiques soulevées par les projets de grande ampleur. \\
 	
