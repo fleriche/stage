@@ -1,3 +1,5 @@
+\subsection{Architecture logicielle}
+
 	Dans cette partie nous allons présenter l'architecture de l'application web développée chez BP1818 et représentée sur la figure \ref{archiFoncBP1818}. Notre équipe est en charge de développer aussi bien la partie frontend que backend de ce projet. Pour cela, différentes technologies ont été choisies peu avant mon arrivée. \\
 	
 	Notre backend est constitué de plusieurs couches dont une API Rest, nommée Fronting-Business, développée à l'aide du framework Spring en ayant recours à Spring Boot et au langage Java. Cette API regroupe l'ensemble du code source et expose tous les services qui seront consommés par notre frontend. Une seconde couche API Gateway est présente et assure la sécurité ou encore le routage en implémentant la gateway Zuul de la stack Netflix OSS, exactement comme pour le projet chez Neuflize OBC (\ref{microservicesArchi}). Cette gateway est temporairement utilisée durant la phase de développement puis sera remplacée par l'API Gateway d'Axway (\ref{axway}) tout comme chez NOBC. Il existe une troisième API développée pour les besoins du projet à savoir le moteur de scoring MIF. Il permet de calculer le score d'un client de la banque en fonction de ses réponses aux questionnaires MIF et n'a pas été conçu par nos soins mais par une équipe interne de chez Natixis. Nous parlerons plus en détails de ce moteur et de son intérêt dans la partie \ref{moteurScoring}. \\
@@ -28,3 +30,8 @@
 	\caption{Architecture du Fronting Digital}
 	\label{archiFoncBP1818}
 \end{figure}
+
+\subsection{Conception de l'application}
+
+\subsubsection{Backend}
+\subsubsection{Frontend}
