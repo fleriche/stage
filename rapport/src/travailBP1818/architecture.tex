@@ -34,4 +34,21 @@
 \subsection{Conception de l'application}
 
 \subsubsection{Backend}
+
+	Comme nous l'avons dit plus haut, nous avons recours au framework Spring ainsi que Spring Boot dans le but de développer le backend de l'application. L'API fronting-business est construite sur la base d'une Architecture Orientée Services (SOA) qui consiste à traiter l'application comme un fournisseur de services. Dans notre cas, il s'agit de services web RESTful, c'est-à-dire des services suivant les principes REST. Tout comme chez NOBC, l'objectif est de s'affranchir des contraintes portées par les applications monolithiques et mettant en place différents services favorisant la réutilisabilité. En effet, l'API doit être construite de manière à ce que ses services puissent être consommés par divers clients et donc réutilisables afin de s'intégrer le plus simplement possible dans les systèmes d'information des entreprises. \\
+
+	Ainsi, nous avons mis en place différentes couches, représentées sur le schéma figure \ref{spring}. La couche \textit{controller} réceptionne les requêtes clients et ne manipule pas directement les objects métiers mais passe par des appels de services. C'est dans cette couche que nous définissons l'ensemble de nos endpoints c'est-à-dire les URLs depuis lesquelles le client peut accéder à nos services. Un contrôleur définit les endpoints exposant des services qui possède la même thématique ou qui sont en lien avec la même fonctionnalité c'est pourquoi, généralement, nous avons un contrôleur par user story. \\
+	
+	La couche \textit{service} contient l'ensemble de nos web services présentant des fonctionnalités unitaires en terme métier. Elle fait abstraction de la compléxité du modèle objet, contient toute la logique des cas d'utilisations permettant d'effectuer les opérations, fournir des données ou encore manipuler les formulaires. Elle implémente la logique métier et gère les appels aux objets de la couche domaine puis valide toutes les règles de gestion métiers. \\
+	
+	La couche \textit{domain} contient tous nos beans et permet d'implémenter le modèle
+	
+	
+\begin{figure}[h!]
+	\includegraphics[scale=0.50]{images/travailBP1818/architecture/spring.png}
+	\centering
+	\caption{Backend Spring Boot}
+	\label{spring}
+\end{figure}
+
 \subsubsection{Frontend}
