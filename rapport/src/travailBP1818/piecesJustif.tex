@@ -5,17 +5,35 @@
 	Comme nous l'avons expliqué dans la partie \ref{deroulementSprint}, la première étape pour l'équipe de développement consiste à prendre connaissance de l'user story afin de la découper en tâches unitaires. Ici, nous avons fait le choix de créer 5 tâches qui sont les suivantes :
 	
 	\subsubsection{Composant pièce justificative}
-		
+	Le composant "pièce justificative" est un composant Angular représentant la brique qui contient tous les éléments et options d'une pièce justificative à savoir :
+	\begin{itemize}
+		\item Le fichier
+		\item La date de fin de validité
+		\item L'accord dérogatoire
+		\item La date d'upload du fichier
+		\item La possibilité de supprimer la pièce
+		\item La possibilité de visualiser la pièce (ou la télécharger si elle ne peut être visualiser sur le navigateur)
+	\end{itemize}
+	Cette brique est représentée par un rectangle rouge sur l'annexe \ref{d1}
 	
-	\subsubsection{Ecran pièce justificative}
+	\subsubsection{Composant écran pièce justificative}
+	Ce composant est l'écran sur lequel sont affichées les pièces justificatives sous la forme d'une liste dont les éléments sont les composants décrits précédemment. Celui-ci pré-remplie la liste avec les pièces définies comme étant obligatoires. Ainsi, le banquier aura un rapide aperçu des pièces qu'il doit demander à son client et n'aura qu'à uploader les fichiers pour compléter la liste. De plus, un menu déroulant doit être présent, permettant de rajouter des pièces manuellement à la liste, dites facultatives qui apparaissent d'une couleur différente. En outre, le service d'appel front devra être créé afin de pouvoir communiquer avec l'API et consommer les web services. En outre, l'écran doit être accessible depuis la barre de navigation principale de l'application et un compteur indiquant le nombre de pièces obligatoires fournies/totales (par exemple 2/5) doit figurer au-dessus de la barre.
+	
 	\subsubsection{Référentiel}
+	Dans notre application apparait un certain nombre de données métiers constantes comme la liste des pays pour un client, la liste des départements pour la France ou encore la liste des formes juridiques pour une entreprise. Pour toutes ces listes de données un endpoint est ajouté et un service appelé \textit{référentiel} est créé. Ainsi, il est possible de les obtenir de manière simple depuis le front en consommant le service adéquat. Si les métiers ont le besoin de modifier les valeurs, il suffit d'apporter une simple modification rapide et cela permet de garder un code structuré et clair. Dans notre cas, un référentiel devait être créé afin de référencer tous les types de pièces justificatives prises en charge par la banque (carte d'identité, justificatif de domicile, etc... pour un total de 41 différentes).	
+	
 	\subsubsection{Backend}
+	Comme son nom l'indique, cette tâche consiste à développer les services backend destinés à alimenter notre frontend. Cela implique la création du contrôleur et de tous les endpoints, le service dédié ainsi que le modèle permettant de gérer les pièces justificatives. De plus, cela inclut le paramétrage pour la limite de taille des fichiers à uploader ainsi que la validation des données reçues.
+	
 	\subsubsection{Moteur de calcul}
+	Nous avons dit plus haut que l'écran des pièces dévait pré-afficher la liste des pièces obligatoires. Or, le fait qu'une pièce soit obligatoire ou non dépend des données personnelles du client de la banque. Ainsi, le moteur de calcul doit prendre en compte l'ensemble des règles de gestion métiers ainsi que les données entrées jusqu'à présent par le banquier dans l'application afin de définir la liste des pièces obligatoires puis la transmettre au composant écran. \\
+	
+	Comme je l'ai dit plus haut, j'ai travaillé sur cette story avec un autre stagiaire. Ainsi, nous nous sommes séparé les tâches avant de commencer c'est pourquoi je me suis plutôt occupé de la partie backend (backend, référentiel et moteur de calcul) et lui de la partie frontend. Ce découpage permettait d'avancer sans problèmes en parallèle. \\
 	
 	\newpage
 \begin{itemize}
-	\item prendre connaissance user story + besoin client
-	\item découpage en tâche sur github
+	\item prendre connaissance user story + besoin client OK
+	\item découpage en tâche sur github OK
 	\item sprint planning (tableau avec les temps)
 	\item définition du modèle
 	\item définition des endpoints
