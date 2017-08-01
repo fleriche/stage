@@ -1,0 +1,15 @@
+@startuml
+actor Banquier
+Banquier -> Front: Quitte/Actualise écran pièces justificatives
+loop pièces
+alt Pièce contient fichier
+Front -> Front: Ajout pièce au formulaire
+end
+end
+Front -> Back: Sauvegarde du formulaire
+database Couchbase
+Back -> Couchbase: Sauvegarde
+Couchbase -> Back: Réponse
+Back -> Front: Retourne le formulaire
+Front -> Banquier: Redirige/Actualise
+@enduml

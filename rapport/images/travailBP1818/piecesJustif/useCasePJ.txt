@@ -1,0 +1,10 @@
+@startuml
+Utilisateur << Banquier >>
+Utilisateur -right-> (Consulter les pièces justificatives)
+Utilisateur -up-> (Ajouter une nouvelle pièce justificative à la liste)
+Utilisateur -up-> (Modifier une pièce justificative existante)
+Utilisateur -up-> (Supprimer une pièce justificative de la liste)
+Utilisateur -down-> (Uploader un fichier pour une pièce justificative)
+Utilisateur -down-> (Downloader un fichier d'une pièce justificative)
+Utilisateur -down-> (Supprimer un fichier d'une pièce justificative)
+@enduml

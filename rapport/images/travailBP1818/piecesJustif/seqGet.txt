@@ -1,0 +1,13 @@
+@startuml
+actor Banquier
+Banquier -> Front: Ecran pièces justificatives
+Front -> Front: Calcul liste pièces obligatoires
+Front -> Back: Obtenir formulaire pièces justificatives
+database Couchbase
+Back -> Couchbase: Requête
+Couchbase -> Back: Réponse
+Back -> Front: Retourne formulaire
+Front -> Front: Extrait liste pièces sauvegardées du formulaire
+Front -> Front: Merge liste pièces sauvegardées et pièces obligatoires
+Front -> Banquier: Affiche la liste des pièces du client
+@enduml
