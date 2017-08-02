@@ -1,0 +1,28 @@
+@startuml
+class Justificatifs {
+  id : String
+  justificatifs : List<Justificatif>
+}
+
+class Justificatif {
+  id: String
+  type: String
+  sousType: String
+  idTiers: String
+  identite: String
+  reference: String
+  dateValidite: String
+  derogation: Boolean
+  fichiers: List<Fichier>
+}
+
+class Fichier {
+  nom: String
+  url: String
+  dateUpload: String
+  contentType: String
+}
+
+Justificatifs "1" *-right- "1..n" Justificatif : contains
+Justificatif "1" *-right- "1..n" Fichier : contains
+@enduml

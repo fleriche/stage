@@ -55,6 +55,8 @@
 
 \subsection{Conception}
 
+	\subsubsection{Endpoints - couche controller}
+
 	Dans un premier temps, j'ai commencé par définir les différents cas d'utilisation possible d'un banquier qui utiliserait l'écran des pièces justificatives. Il est possible d'observer ces cas sur le diagramme figure \ref{useCasePJ}.
 
 \begin{figure}[h!]
@@ -64,24 +66,48 @@
 	\label{useCasePJ}
 \end{figure}
 
-	Une fois ces derniers définis j'ai pu procéder à la création du contrôleur ainsi que des endpoints permettant d'exposer les services répondant aux cas d'utilisation. Pour cela, il a fallu déterminer les méthodes HTTP et l'url associée que notre client pourra intéroger en essayant de rester RESTful. Le tableau suivant décrit les endpoints ainsi créés :
+	Pour chacun de ces derniers j'ai décidé de mettre en place un service permettant de répondre au besoin qu'il définissait. J'ai ainsi pu procéder à la création du contrôleur ainsi que des endpoints permettant d'exposer les services répondant aux cas d'utilisation. Pour cela, il a fallu déterminer les méthodes HTTP et l'url associée que notre client pourra intéroger en essayant de rester RESTful. Le tableau suivant décrit les endpoints ainsi créés :
 	
 \begin{table}[h!]
 	\center
-	\begin{tabular}{| c | c |}
+	\begin{tabular}{| c | c | c |}
      \hline
-     Méthode HTTP & URL \\ \hline
-     GET & /justificatifs/{idForm}\\ \hline
-     POST & /justificatifs/{idForm}/justificatif\\ \hline
-     PUT & /justificatifs/{idForm}/justificatif\\ \hline
-     DELETE & /justificatifs/{idForm}/justificatif\\ \hline
-     GET & /{idForm}/fichier\\ \hline
-     POST & /{idForm}/fichier\\ \hline
-     DELETE & /{idForm}/fichier\\ \hline
+     Cas d'utilisation & Méthode HTTP & URL \\ \hline
+     Obtenir pièces justificatives & GET & /justificatifs/{idForm}\\ \hline
+     Créer pièce justificative & POST & /justificatifs/{idForm}/justificatif\\ \hline
+     Modifier pièce justificatives & PUT & /justificatifs/{idForm}/justificatif\\ \hline
+     Supprimer pièce justificative & DELETE & /justificatifs/{idForm}/justificatif\\ \hline
+     Downloader fichier & GET & /{idForm}/fichier\\ \hline
+     Uploader fichier & POST & /{idForm}/fichier\\ \hline
+     Supprimer fichier & DELETE & /{idForm}/fichier\\ \hline
 	\end{tabular}
 	\caption{Sprint planning pièces justificatives}
 	\label{sprintPlanningPJ}
 \end{table}
+
+	\subsubsection{Modèle - couche domain}
+	
+	Comme nous l'avons vu dans la partie \ref{archiBP1818}, nous avons recours à Couchbase pour notre base de données de type NoSQL. Ainsi, toutes les données sont enregistrées sous la forme de documents au format JSON. Dans notre cas, nous avons généralement un document par formulaire dont le nom est constitué de l'id du client et d'un préfixe permettant d'identifier rapidement le formulaire. Par exemple, nous avons un écran sur lequel il est possible de spécifier les données personnelles du client. Le formulaire est sauvegardé dans un document portant le nom \textit{TIERS\_10001} pour le client d'id 10001. Nous avons un écran déroulant une série de questions sur les patrimoines et revenus du client. Le formulaire regroupe les réponses à toutes les questions et est sauvegardé dans le document \textit{PAT\_10001}, toujours pour le client d'id 10001. Ainsi, dans le cas des pièces justificatives j'ai décidé de sauvegarder l'ensemble du formulaire contenant les pièces dans un nouveau document dont le nom serait \textit{JUST\_ID}. \\
+	
+	Une fois cela définit, il fallait déterminer quelles données devaient être persistées ainsi que leur structure. J'ai donc commencé par définir le modèle qui serait utilisé en étudiant plus en profondeur l'user story afin de relever toutes les informations à persister. Ce modèle peut être représenter par le diagramme de classe figure \ref{modelePJ}.	
+	
+\begin{figure}[h!]
+	\includegraphics[scale=0.7]{images/travailBP1818/piecesJustif/modelePJ.png}
+	\centering
+	\caption{Modèle des pièces justificatives}
+	\label{modelePJ}
+\end{figure}
+
+	La classe \textit{Fichier} représente un fichier uploadé par le banquier et contient ses informations comme son nom, l'url indiquant à quel endroit est enregistré le fichier, la date à laquelle il a été enregistré et son content-type. Celui-ci est une en-tête permettant d'indiquer le type MIME d'une ressource, nécessaire dans notre cas pour visualiser le fichier dans le navigateur.
+	
+	Ensuite, la classe \textit{Justificatif} représente une pièce justificative et toutes les informations qui lui sont associées comme le type ou la date de validité. Elle contient aussi l'id du tiers ("idTiers") à qui elle appartient afin de pouvoir l'identifier ainsi que son identité ("identite") afin de pouvoir afficher le nom de son propriétaire côté frontend (par exemple carte d'identité de M. Jean Dupont). En outre, cette classe contient une liste de fichier ("fichiers") contenant tous les fichiers uploadés pour la pièce justificative (par exemple pour une carte d'identité il peut y avoir deux fichiers : une image pour le recto et une pour le verso).
+	
+	Enfin, la classe \textit{Justificatifs} contenant l'id du document au format JUST\_ID ainsi qu'une liste de pièces justificatives ("justificatifs"). \\
+	
+	J'ai pu implémenter ce modèle en Java en créant des Beans côté backend. Nous utilisons actuellement Maven comme outil de gestion et d'automatisation de production de logiciel. Nous avons configuré un plugin Maven, nommé \textit{Typescript Generator}, permettant de générer le modèle côté frontend. En effet, une fois le modèle créé côté backend, il suffit de relancer un build Maven afin que ce plugin génère le code Typescript à partir du code Java. Un fichier est créé contenant toutes les interfaces typescript obtenues à partir des Beans java. Cela nous permet d'assurer la cohérence entre nos modèles back et front et nous permet de gagner beaucoup de temps en nous évitant de réécrire une seconde fois le modèle.
+	  
+	
+	\subsubsection{Repository - couche repository}
 
 \begin{figure}[h!]
 	\includegraphics[scale=0.55]{images/travailBP1818/piecesJustif/seqSave.png}
@@ -100,13 +126,29 @@
 \subsection{Réalisation}
 
 \subsection{Résultats et perspectives}
+
+\begin{table}[h!]
+	\center
+	\begin{tabular}{| c | c | c |}
+     \hline
+     Tâche & Charge prévue (jour) & Charge réelle (jour) \\ \hline
+     Composant pièce justificative & ? & ?\\ \hline
+     Composant écran justificatifs & ? & ?\\ \hline
+     Backend & ? & ?\\ \hline
+     Référentiel & ? & ?\\ \hline
+     Moteur de calcul & ? & ?\\
+     \hline
+	\end{tabular}
+	\caption{Rétrospective pièces justificatives}
+	\label{retroPJ}
+\end{table}
 	
 	
 	\newpage
 \begin{itemize}
 	\item prendre connaissance user story + besoin client OK
 	\item découpage en tâche sur github OK
-	\item sprint planning (tableau avec les temps)
+	\item sprint planning (tableau avec les temps) OK
 	\item définition du modèle
 	\item définition des endpoints
 	\item référentiel
