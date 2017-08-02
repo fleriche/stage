@@ -107,7 +107,22 @@
 	J'ai pu implémenter ce modèle en Java en créant des Beans côté backend. Nous utilisons actuellement Maven comme outil de gestion et d'automatisation de production de logiciel. Nous avons configuré un plugin Maven, nommé \textit{Typescript Generator}, permettant de générer le modèle côté frontend. En effet, une fois le modèle créé côté backend, il suffit de relancer un build Maven afin que ce plugin génère le code Typescript à partir du code Java. Un fichier est créé contenant toutes les interfaces typescript obtenues à partir des Beans java. Cela nous permet d'assurer la cohérence entre nos modèles back et front et nous permet de gagner beaucoup de temps en nous évitant de réécrire une seconde fois le modèle.
 	  
 	
-	\subsubsection{Repository - couche repository}
+	\subsubsection{Communication avec Couchbase - couche repository}
+	
+	Le modèle étant défini, il fallait maintenant mettre en place la communication avec Couchbase afin de persister les données ou les récupérer. Pour cela, j'ai créé un repository pour les pièces justificatives. Il s'agit d'une interface contenant toutes les requêtes qu'il est possible d'effectuer sur un document particulier et pouvant être utilisée par injection de dépendance dans un service. Le schéma figure \ref{repository} explicite le fonctionnement de nos repository et l'illustre à l'aide d'un exemple sur les pièces justificatives. \\
+	
+	Couchbase met à notre disposition une interface, \textit{CouchbasePagingAndSortingRepository<E, ID extends Serializable>}, définissant les requêtes les plus simples et fréquentes comme la sauvegarde d'un document, la recherche ou encore la suppression d'un document par id et gère pour nous les étapes d'ouverture/fermeture de la connexion à la base. Nous n'avons donc rien à implémenter et il suffit de créer un repository héritant de cette interface en spécifiant l'entité que l'on souhaite gérer (E) et le type de la clé (ID). Dans notre cas nous avons une interface, \textit{IdentifiableRepository<E extends IdentifiableDocument>}, héritant de cette dernière qui est notre repository par défaut pour tous les documents. Celle-ci précise lors de son héritage que le type de la clé est \textit{String } et que l'entité est une classe héritant de l'interface \textit{IdentifiableDocument}. Cette interface permet de rajouter et de publier les identifiants d'un document. \\
+	
+	Ainsi, pour chaque nouveau type de document créé, comme pour les pièces justificatives, il suffit de créé un repository héritant à son tour de notre interface générale. J'ai donc créé JustificatifsRepository de cette manière et fait en sorte que la classe \textit{Justificatifs} implémente l'interface IdentifiableDocument. Cette procédure permet de grandement économiser du temps et de simplifier le processus de création de nouveau document en favorisant la réutilisabilité.
+
+\begin{figure}[h!]
+	\includegraphics[scale=0.55]{images/travailBP1818/piecesJustif/repository.png}
+	\centering
+	\caption{Fonctionnement des repository}
+	\label{repository}
+\end{figure}
+	
+	\subsubsection{Service - couche service}
 
 \begin{figure}[h!]
 	\includegraphics[scale=0.55]{images/travailBP1818/piecesJustif/seqSave.png}
@@ -122,8 +137,6 @@
 	\caption{Affichage des pièces justificatives}
 	\label{seqGet}
 \end{figure}
-
-\subsection{Réalisation}
 
 \subsection{Résultats et perspectives}
 
