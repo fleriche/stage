@@ -98,9 +98,9 @@
 	\label{modelePJ}
 \end{figure}
 
-	La classe \textit{Fichier} représente un fichier uploadé par le banquier et contient ses informations comme son nom, l'url indiquant à quel endroit est enregistré le fichier, la date à laquelle il a été enregistré et son content-type. Celui-ci est une en-tête permettant d'indiquer le type MIME d'une ressource, nécessaire dans notre cas pour visualiser le fichier dans le navigateur.
+	La classe \textit{Fichier} représente un fichier uploadé par le banquier et contient ses informations comme son nom, l'url indiquant à quel endroit est enregistré le fichier, la date à laquelle il a été enregistré et son content-type. Celui-ci est une en-tête permettant d'indiquer le type MIME d'une ressource, nécessaire dans notre cas pour visualiser le fichier dans le navigateur. \\
 	
-	Ensuite, la classe \textit{Justificatif} représente une pièce justificative et toutes les informations qui lui sont associées comme le type ou la date de validité. Elle contient aussi l'id du tiers ("idTiers") à qui elle appartient afin de pouvoir l'identifier ainsi que son identité ("identite") afin de pouvoir afficher le nom de son propriétaire côté frontend (par exemple carte d'identité de M. Jean Dupont). En outre, cette classe contient une liste de fichier ("fichiers") contenant tous les fichiers uploadés pour la pièce justificative (par exemple pour une carte d'identité il peut y avoir deux fichiers : une image pour le recto et une pour le verso).
+	Ensuite, la classe \textit{Justificatif} représente une pièce justificative et toutes les informations qui lui sont associées comme le type ou la date de validité. Elle contient aussi l'id du tiers ("idTiers") à qui elle appartient afin de pouvoir l'identifier ainsi que son identité ("identite") afin de pouvoir afficher le nom de son propriétaire côté frontend (par exemple carte d'identité de M. Jean Dupont). En outre, cette classe contient une liste de fichier ("fichiers") contenant tous les fichiers uploadés pour la pièce justificative (par exemple pour une carte d'identité il peut y avoir deux fichiers : une image pour le recto et une pour le verso). \\
 	
 	Enfin, la classe \textit{Justificatifs} contenant l'id du document au format JUST\_ID ainsi qu'une liste de pièces justificatives ("justificatifs"). \\
 	
@@ -109,20 +109,37 @@
 	
 	\subsubsection{Communication avec Couchbase - couche repository}
 	
-	Le modèle étant défini, il fallait maintenant mettre en place la communication avec Couchbase afin de persister les données ou les récupérer. Pour cela, j'ai créé un repository pour les pièces justificatives. Il s'agit d'une interface contenant toutes les requêtes qu'il est possible d'effectuer sur un document particulier et pouvant être utilisée par injection de dépendance dans un service. Le schéma figure \ref{repository} explicite le fonctionnement de nos repository et l'illustre à l'aide d'un exemple sur les pièces justificatives. \\
+	Le modèle étant défini, il fallait maintenant mettre en place la communication avec Couchbase afin de persister les données ou les récupérer. Pour cela, j'ai créé un repository pour les pièces justificatives. Comme nous l'avons vu plus haut, il s'agit d'une interface facilitant grandement l'utilisation de requêtes vers notre base de données. Le schéma figure \ref{repository} illustre le fonctionnement du repository des pièces justificatives. \\
 	
-	Couchbase met à notre disposition une interface, \textit{CouchbasePagingAndSortingRepository<E, ID extends Serializable>}, définissant les requêtes les plus simples et fréquentes comme la sauvegarde d'un document, la recherche ou encore la suppression d'un document par id et gère pour nous les étapes d'ouverture/fermeture de la connexion à la base. Nous n'avons donc rien à implémenter et il suffit de créer un repository héritant de cette interface en spécifiant l'entité que l'on souhaite gérer (E) et le type de la clé (ID). Dans notre cas nous avons une interface, \textit{IdentifiableRepository<E extends IdentifiableDocument>}, héritant de cette dernière qui est notre repository par défaut pour tous les documents. Celle-ci précise lors de son héritage que le type de la clé est \textit{String } et que l'entité est une classe héritant de l'interface \textit{IdentifiableDocument}. Cette interface permet de rajouter et de publier les identifiants d'un document. \\
-	
-	Ainsi, pour chaque nouveau type de document créé, comme pour les pièces justificatives, il suffit de créé un repository héritant à son tour de notre interface générale. J'ai donc créé JustificatifsRepository de cette manière et fait en sorte que la classe \textit{Justificatifs} implémente l'interface IdentifiableDocument. Cette procédure permet de grandement économiser du temps et de simplifier le processus de création de nouveau document en favorisant la réutilisabilité.
+	J'ai donc créé JustificatifsRepository et fait en sorte que la classe \textit{Justificatifs} implémente l'interface IdentifiableDocument. Pour cette user story aucune autre requête que celles fournies était nécessaire donc aucun développement supplémentaire était requis. \\
 
 \begin{figure}[h!]
-	\includegraphics[scale=0.55]{images/travailBP1818/piecesJustif/repository.png}
+	\includegraphics[scale=0.55]{images/travailBP1818/piecesJustif/repositoryPJ.png}
 	\centering
-	\caption{Fonctionnement des repository}
-	\label{repository}
+	\caption{Repository pièces justificatives}
+	\label{repositoryPJ}
 \end{figure}
-	
+		
 	\subsubsection{Service - couche service}
+	
+	A ce stade, les cas d'utilisation étaient connus, le modèle défini, la communication avec Couchbase établie et les endpoints exposant les services prêts. La prochaine étape consistait à effectivement développer les services permettant de répondre aux différents besoins identifiés sur le diagramme figure \ref{useCasePJ}.
+	
+\begin{table}[h!]
+	\center
+	\begin{tabular}{| c | c |}
+     \hline
+     Services & Description \\ \hline
+     findJustificatifs & Permet de retourner le formulaire JUST\_ID contenant toutes les pièces \\ \hline
+     createPiece & Permet de créer pièce justificative en l'ajoutant au formulaire \\ \hline
+     updatePiece & Permet de mettre à jour une pièce justificative du formulaire \\ \hline
+     deletePiece & Permet de supprimer une pièce justificative en la supprimant du formulaire \\ \hline
+     uploadFile & Permet d'uploader un fichier \\ \hline
+     downloadFile & Permet de downloader un fichier \\ \hline
+     deleteFile & Permet de supprimer un fichier\\ \hline
+	\end{tabular}
+	\caption{Services pièces justificatives}
+	\label{servicesPJ}
+\end{table}
 
 \begin{figure}[h!]
 	\includegraphics[scale=0.55]{images/travailBP1818/piecesJustif/seqSave.png}
@@ -162,11 +179,12 @@
 	\item prendre connaissance user story + besoin client OK
 	\item découpage en tâche sur github OK
 	\item sprint planning (tableau avec les temps) OK
-	\item définition du modèle
-	\item définition des endpoints
-	\item référentiel
-	\item pb avec swagger
+	\item définition des endpoints OK
+	\item définition du modèle OK
+	\item référentiel OK
+	\item service
 	\item moteur de scoring front (règles de gestion)
 	\item TU
+	\item pb avec swagger
 	\item resultat obtenu (retard tableau comparatif + pourquoi + mesure)
 \end{itemize}
