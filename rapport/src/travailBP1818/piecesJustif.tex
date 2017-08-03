@@ -53,7 +53,7 @@
 
 	Une fois le sprint planning terminé nous avons pu passer à la conception de nos tâches respectives ainsi qu'à la phase de développement.
 
-\subsection{Conception}
+\subsection{Conception backend}
 
 	\subsubsection{Endpoints - couche controller}
 
@@ -84,6 +84,8 @@
 	\caption{Sprint planning pièces justificatives}
 	\label{sprintPlanningPJ}
 \end{table}
+
+	En outre, j'ai créé un endpoint supplémentaire que j'ai placé dans le contrôleur \textit{ReferentielController} dédié aux référentiels. Celui-ci permet d'accéder au référentiel des pièces justificatives et donc d'obtenir la liste des types de pièces qu'il est possible d'utiliser dans l'application.
 
 	\subsubsection{Modèle - couche domain}
 	
@@ -141,6 +143,8 @@
 	\label{servicesPJ}
 \end{table}
 
+	Comme nous l'avons expliqué, l'écran des pièces justificatives doit présenter la liste des pièces obligatoires obtenu par le biais du moteur de calcul. Pour chacune de ces pièces il est possible d'ajouter un ou plusieurs fichiers en appelant le service uploadFile. Comme il est possible de l'observer sur le diagramme figure \ref{seqSave} et à la demande des métiers, une pièce est sauvegardée si et seulement si elle possède un fichier. Dans le cas contraire la pièce n'est pas ajoutée au formulaire qui sera envoyé au back par la suite et ne sera donc pas sauvegardée. En effet, si une pièce obligatoire ne possède pas de fichier elle sera simplement ajoutée par le moteur de calcul implémenté côté front. Concernant les pièces facultatives, il est logique qu'elles ne soient pas sauvegardées si aucun fichier n'est ajouté. A chaque fois qu'un fichier est ajouté à une pièce, une requête POST est envoyée via le service createPiece afin de créer la pièce côté back s'il s'agit de son premier fichier sinon une requête PUT est envoyée via le service updatePiece afin de mettre à jour le formulaire des pièces justificatives.
+
 \begin{figure}[h!]
 	\includegraphics[scale=0.55]{images/travailBP1818/piecesJustif/seqSave.png}
 	\centering
@@ -148,12 +152,22 @@
 	\label{seqSave}
 \end{figure}
 
+	Ensuite, lorsque l'utilisateur souhaite accéder à l'écran des pièces justificatives, le moteur de calcul fourni la liste des pièces obligatoires pendant qu'une requête est envoyée côté back via le service findJustificatifs pour récupérer le formulaire contenant toutes les pièces sauvegardées de manière asynchrone. Une fois les deux listes obtenues, elles sont mergées en une liste finale afin d'éliminer les doublons qui sera affichée sur l'écran. Par exemple, le moteur peut indiquer que la pièce "carte d'identité" est obligatoire. Si les fichier de la carte d'identité du titulaire du compte ont bien été ajouté et sauvegardé alors lors du merge de la liste du moteur et de la liste du back, seule la pièce "carte d'identité" du back sera gardée. Le diagramme de séquence réalisé pour ce cas figure \ref{seqGet} illustre ce principe. En sauvegardant et récupérant les pièces de cette manière nous pouvons maintenir la cohérence des données et limiter le nombre de requêtes envoyées à notre backend. \\
+	
+	Les autres services comme le téléchargement de fichiers ou la suppression de pièces n'ont pas nécessité de diagrammes et sont utilisés simplement par clic sur un bouton. \\
+
 \begin{figure}[h!]
 	\includegraphics[scale=0.55]{images/travailBP1818/piecesJustif/seqGet.png}
 	\centering
 	\caption{Affichage des pièces justificatives}
 	\label{seqGet}
 \end{figure}
+
+\subsection{Conception frontend}
+	
+	Pour la partie frontend je me suis chargé de mettre en place le moteur de calcul permettant de fournir la liste des pièces obligatoires pour un client de la banque.
+
+\hl{TODO: conception frontend}
 
 \subsection{Résultats et perspectives}
 
@@ -173,18 +187,4 @@
 	\label{retroPJ}
 \end{table}
 	
-	
-	\newpage
-\begin{itemize}
-	\item prendre connaissance user story + besoin client OK
-	\item découpage en tâche sur github OK
-	\item sprint planning (tableau avec les temps) OK
-	\item définition des endpoints OK
-	\item définition du modèle OK
-	\item référentiel OK
-	\item service
-	\item moteur de scoring front (règles de gestion)
-	\item TU
-	\item pb avec swagger
-	\item resultat obtenu (retard tableau comparatif + pourquoi + mesure)
-\end{itemize}
+	\hl{TODO : pb swagger + pk temps perdu + perspectives}

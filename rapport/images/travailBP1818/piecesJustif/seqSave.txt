@@ -1,15 +1,23 @@
 @startuml
 actor Banquier
-Banquier -> Front: Quitte/Actualise écran pièces justificatives
-loop pièces
-alt Pièce contient fichier
-Front -> Front: Ajout pièce au formulaire
+Banquier -> Front: Ajoute fichier
+alt La pièce ne contient pas de fichiers
+Front -> Back: POST createPiece
+Database Couchbase
+Back -> Couchbase: Récupération du formulaire
+Couchbase -> Back: formulaire
+Back -> Back: Ajout de la pièce au formulaire
+Back -> Couchbase: Sauvegarde du formulaire
+Couchbase -> Back: formulaire
+else La piece contient déjà au moins un fichier
+Front -> Back: PUT updatePiece
+Back -> Couchbase: Récupération du formulaire
+Couchbase -> Back: formulaire
+Back -> Back: Suppression de l'ancienne pièce du formulaire
+Back -> Back: Ajout de la nouvelle pièce du formulaire
+Back -> Couchbase: Sauvegarde du formulaire
+Couchbase -> Back: formulaire
 end
-end
-Front -> Back: Sauvegarde du formulaire
-database Couchbase
-Back -> Couchbase: Sauvegarde
-Couchbase -> Back: Réponse
-Back -> Front: Retourne le formulaire
-Front -> Banquier: Redirige/Actualise
+Back -> Front: formulaire
+Front -> Banquier: Actualise la liste
 @enduml
