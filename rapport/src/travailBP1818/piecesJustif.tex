@@ -169,7 +169,7 @@
 
 \hl{TODO: conception frontend}
 
-\subsection{Résultats et perspectives}
+\subsection{Résultats}
 
 \begin{table}[h!]
 	\center
@@ -187,4 +187,12 @@
 	\label{retroPJ}
 \end{table}
 	
-	\hl{TODO : pb swagger + pk temps perdu + perspectives}
+	\hl{TODO : pb swagger + pk temps perdu}
+
+\section{Perspectives}
+
+	J'ai ici pris le sprint des pièces justificatives en guide d'exemple dans le but d'illustrer l'étude des spécifications, la conception ainsi que la réalisation d'un sprint de manière générale. L'ensemble des sprints se déroule de cette manière sur des périodes de deux à trois semaines selon les conditions et la charge de travail. Je ne décrirais pas plus en profondeur les autres sprints puisque le principe reste le même. Cependant, au cours de ces derniers j'ai parfois été amené à effectuer certaines tâches s'écartant des user stories. Par exemple, nous travaillons le code de manière incrémentale se qui implique des changements et des évolutions. De plus, lors des sprint review nous tenons compte des remarques client c'est pourquoi j'ai parfois été amené à faire du refactoring sur certaines fonctionnalités. \\
+	
+	Lors de la création d'une personne physique, l'écran affiche une barre de navigation avec les différents onglets disponibles (voir annexe \hl{TODO : annexe}). Au-dessus de la mention de chacun de ces onglets il faut afficher une "coche" permettant d'indiquer si les données sont bien remplies. L'affichage de la coche doit toujours être calculée, qu'importe l'onglet dans lequel on se trouve. Le calcul se fait à partir de la validité du formulaire présent dans l'onglet en question. Cela implique de récupérer \textbf{l'ensemble} de tous les formulaires à chaque fois que l'on navigue dans l'application ce qui représente un grand nombre de requête vers notre backend et a pour conséquence une baisse de performance. Ainsi, j'ai pu mettre en place un système de cache côté frontend afin de ne plus requêter sans cesse notre API. Il pourrait être intéressant de mettre en place un système de cache côté backend à l'aide de \textit{redis cache manager} afin de diminuer le nombre de requêtes vers Couchbase. \\
+	
+	De plus, lors de la réalisation de ce refactoring je me suis rendu compte qu'il pourrait être bénéfique de mettre en place du monitoring pour notre application. En effet, certains autres outils de la stack Netflix fournissent de très bons résultats pour cela. \textit{Zipkin} permet de traquer toutes les requêtes effectuées et donc de déceler certains problèmes de parallélisation issus de la programmation réactive. \textit{Hystrix} de son côté propose des dashboards permettant d'effectuer du monitoring et du suivi d'erreur. La gestion des requêtes à destination de notre backend serait simplifier de part l'utilsiation de ces outils. Néanmoins, la mise en place de ces derniers requiert du temps et la mobilisation de certaines ressources, ce que nous ne pouvons pas nous permettre en ce moment. Cependant, pour les projets semblables à venir chez Natixis dont BP1818 est une filiale, ils pourraient être mis en oeuvre dès le début du projet.
